@@ -2,6 +2,9 @@
 
 A set of react native modules to handle authentication
 
+![Screenshot](https://raw.githubusercontent.com/thunder-js/storm-auth/master/screenshots/img1.jpeg)
+![Screenshot](https://raw.githubusercontent.com/thunder-js/storm-auth/master/screenshots/img2.jpeg)
+
 ## Installation
 ```
 yarn add storm-auth
