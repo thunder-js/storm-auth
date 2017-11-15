@@ -1,13 +1,13 @@
 import React from 'react';
-import { func, bool } from 'prop-types';
-import TextInput from '@common/components/TextInput';
-import styled from 'styled-components/native';
 import { View, Image, Alert } from 'react-native';
-import PasswordInput from '@common/components/PasswordInput';
-import AuthButton from '@common/components/AuthButton';
+import { func, bool } from 'prop-types';
+import styled from 'styled-components/native';
+import TextInput from '../common/TextInput';
+import PasswordInput from './PasswordInput';
+import Button from '../common/Button';
 
-const userImage = require('@resources/assets/icon-user.png');
-const emailImage = require('@resources/assets/icon-email.png');
+const userImage = require('../resources/assets/icon-user.png');
+const emailImage = require('../resources/assets/icon-email.png');
 
 
 const Wrapper = styled(View)`
@@ -19,7 +19,7 @@ const StyledTextInput = styled(TextInput)`
 const StyledPasswordInput = styled(PasswordInput)`
   margin-bottom: 30px;
 `;
-const LoginWithPasswordButton = styled(AuthButton)`
+const LoginWithPasswordButton = styled(Button)`
 `;
 
 class SignUpForm extends React.Component {
@@ -48,7 +48,7 @@ class SignUpForm extends React.Component {
 
   handleSignUpPress = () => {
     const {
-      onSignUp,
+      signUp,
     } = this.props;
     const {
       name,
@@ -58,7 +58,7 @@ class SignUpForm extends React.Component {
     if (!name || !email || !password) {
       Alert.alert('Erro', 'Preencha todos os campos')
     } else {
-      onSignUp(name, email, password);
+      signUp(name, email, password);
     }
   }
   render() {
@@ -73,7 +73,6 @@ class SignUpForm extends React.Component {
 
     return (
       <Wrapper>
-        {/* <KeyboardAvoidingView> */}
         <StyledTextInput
           leftIcon={<Image source={userImage} />}
           placeholder="Nome completo"
@@ -97,14 +96,13 @@ class SignUpForm extends React.Component {
           disabled={loading}
           onPress={this.handleSignUpPress}
         />
-        {/* </KeyboardAvoidingView> */}
       </Wrapper>
     );
   }
 }
 
 SignUpForm.propTypes = {
-  onSignUp: func.isRequired,
+  signUp: func.isRequired,
   loading: bool.isRequired,
 };
 export default SignUpForm;

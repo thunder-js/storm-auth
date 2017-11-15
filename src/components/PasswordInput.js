@@ -1,10 +1,10 @@
 import React from 'react';
-import TextInput from '../common/TextInput'
 import { Image } from 'react-native';
+import TextInput from '../common/TextInput'
 
-const lockImage = require('../resources/icon-lock.png');
-const eyeImage = require('../resources/icon-eye.png');
-const eyeOffImage = require('../resources/icon-eye-off.png');
+const lockImage = require('../resources/assets/icon-lock.png');
+const eyeImage = require('../resources/assets/icon-eye.png');
+const eyeOffImage = require('../resources/assets/icon-eye-off.png');
 
 export default class PasswordInput extends React.Component {
   constructor(props) {

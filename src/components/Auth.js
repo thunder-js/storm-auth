@@ -1,14 +1,10 @@
 import React from 'react';
 import { View, ScrollView, Image, ImageBackground, Dimensions, Text, TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
-import SignIn from '../containers/SignIn';
-import SignUp from '../containers/SignUp';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { func } from 'prop-types'
+import { func, any, element } from 'prop-types'
 
-const authBackground = require('../../assets/auth-background.png');
-const authLogo = require('../../assets/auth-logo.png');
-const closeImageSource = require('../../assets/icon-close.png');
+const closeImageSource = require('../resources/assets/icon-close.png');
 
 const Separator = styled(View)`
   height: 1px;
@@ -42,7 +38,7 @@ const FormWrapper = styled(View)`
 
 const BackgroundImage = styled(ImageBackground)`
   flex: 1;
-  background-color: red;
+  background-color: transparent;
 `;
 
 const LogoWrapper = styled(View) `
@@ -64,9 +60,13 @@ const FooterWrapper = styled(View)`
   bottom: 0;
 `;
 
+const SignInCallPrefix = styled(Text)`
+  color: #FFF;
+`
 const SignInCall = styled(Text)`
   font-weight: 700;
   margin-left: 4px;
+  color: #FFF;
 `;
 
 const FormSeparator = styled(Separator)`
@@ -96,12 +96,18 @@ class Auth extends React.Component {
     this.scrollView.scrollTo({ x: 0, y: 0, animated: true });
   }
   render() {
+    const {
+      backgroundImageSource,
+      logoSource,
+      signInContainer,
+      signUpContainer,
+    } = this.props
     return (
       // <Wrapper>
-      <BackgroundImage source={authBackground} resizeMode="cover">
+      <BackgroundImage source={backgroundImageSource} resizeMode="cover">
         <KeyboardAwareScrollView extraScrollHeight={80}>
           <LogoWrapper>
-            <Logo source={authLogo} resizeMode="contain" />
+            <Logo source={logoSource} resizeMode="contain" />
           </LogoWrapper>
           <CloseButton
             onPress={this.props.onClose}
@@ -115,10 +121,11 @@ class Auth extends React.Component {
             showsHorizontalScrollIndicator={false}
           >
             <FormWrapper>
-              <SignIn />
+              {signInContainer}
+              {/* <SignIn /> */}
               <FormSeparator light />
               <FooterWrapper>
-                <Text light>Não tem uma conta?</Text>
+                <SignInCallPrefix light>Não tem uma conta?</SignInCallPrefix>
                 <ButtonText onPress={this.handleGoToSignUp}>
                   <SignInCall light>Cadastre-se aqui</SignInCall>
                 </ButtonText>
@@ -126,11 +133,12 @@ class Auth extends React.Component {
 
             </FormWrapper>
             <FormWrapper>
-              <SignUp />
+              {signUpContainer}
+              {/* <SignUp /> */}
 
               <FormSeparator light />
               <FooterWrapper>
-                <Text light>Já tem uma conta?</Text>
+                <SignInCallPrefix light>Já tem uma conta?</SignInCallPrefix>
                 <ButtonText onPress={this.handleGoToSignIn}>
                   <SignInCall light>Entre aqui</SignInCall>
                 </ButtonText>
@@ -143,5 +151,10 @@ class Auth extends React.Component {
   }
 }
 
-
+Auth.propTypes = {
+  backgroundImageSource: any.isRequired,
+  logoSource: any.isRequired,
+  signInContainer: element.isRequired,
+  signUpContainer: element.isRequired,
+}
 export default Auth

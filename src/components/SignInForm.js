@@ -6,8 +6,8 @@ import TextInput from '../common/TextInput'
 import PasswordInput from './PasswordInput'
 import Button from '../common/Button'
 
-const emailImage = require('../resources/icon-email.png');
-const facebookImage = require('../resources/icon-facebook.png');
+const emailImage = require('../resources/assets/icon-email.png');
+const facebookImage = require('../resources/assets/icon-facebook.png');
 
 const Wrapper = styled(View)`
   flex: 1;
@@ -46,17 +46,17 @@ class SignInForm extends React.Component {
   }
 
   handleEmailLoginPress = () => {
-    const { onLoginWithPassword } = this.props;
+    const { signInWithEmail } = this.props;
     const { email, password } = this.state;
     if (!email || !password) {
       Alert.alert('Erro', 'Preencha todos os campos')
     } else {
-      onLoginWithPassword(email, password);
+      signInWithEmail(email, password);
     }
   }
   handleFacebookLoginPress = () => {
-    const { onLoginWithFacebook } = this.props;
-    onLoginWithFacebook();
+    const { signInWithFacebook } = this.props;
+    signInWithFacebook();
   }
 
   render() {
@@ -103,8 +103,8 @@ class SignInForm extends React.Component {
 }
 
 SignInForm.propTypes = {
-  onLoginWithPassword: func.isRequired,
-  onLoginWithFacebook: func.isRequired,
+  signInWithEmail: func.isRequired,
+  signInWithFacebook: func.isRequired,
   loadingEmail: bool.isRequired,
   loadingFacebook: bool.isRequired,
 };
