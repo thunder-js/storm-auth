@@ -16,7 +16,7 @@ Platform:
 npm manifest: 
   {
   	"name": "storm-auth",
-  	"version": "0.0.4",
+  	"version": "0.0.5",
   	"main": "index.js",
   	"scripts": {
   		"start": "node node_modules/react-native/local-cli/cli.js start",
@@ -44,9 +44,13 @@ npm manifest:
   		"preset": "react-native"
   	},
   	"peerDependencies": {
+  		"graphql": "^0.11.7",
+  		"react-apollo": "^2.0.1",
   		"react": ">=15.0.0",
   		"react-native": ">=0.43.0",
-  		"styled-components": ">=2.0.0"
+  		"styled-components": ">=2.0.0",
+  		"react-native-fbsdk": "^0.6.3",
+  		"graphql-tag": "^2.5.0"
   	}
   }
 
@@ -3692,14 +3696,14 @@ Lockfile:
       window-size "0.1.0"
 
 Trace: 
-  Error: https://registry.yarnpkg.com/storm-auth: You cannot publish over the previously published version 0.0.4.
-      at Request.params.callback [as _callback] (/usr/local/Cellar/yarn/1.0.2/libexec/lib/cli.js:60302:18)
-      at Request.self.callback (/usr/local/Cellar/yarn/1.0.2/libexec/lib/cli.js:117370:22)
+  Error: canceled
+      at Interface.<anonymous> (/usr/local/Cellar/yarn/1.0.2/libexec/lib/cli.js:115330:13)
+      at emitNone (events.js:105:13)
+      at Interface.emit (events.js:207:7)
+      at Interface._ttyWrite (readline.js:768:16)
+      at ReadStream.onkeypress (readline.js:157:10)
       at emitTwo (events.js:125:13)
-      at Request.emit (events.js:213:7)
-      at Request.<anonymous> (/usr/local/Cellar/yarn/1.0.2/libexec/lib/cli.js:118353:10)
-      at emitOne (events.js:115:13)
-      at Request.emit (events.js:210:7)
-      at Gunzip.<anonymous> (/usr/local/Cellar/yarn/1.0.2/libexec/lib/cli.js:118273:12)
-      at Object.onceWrapper (events.js:314:30)
-      at emitNone (events.js:110:20)
+      at ReadStream.emit (events.js:213:7)
+      at emitKeys (internal/readline.js:417:14)
+      at emitKeys.next (<anonymous>)
+      at ReadStream.onData (readline.js:1005:36)
