@@ -1,6 +1,6 @@
 import { compose } from 'recompose'
 import { graphql } from 'react-apollo'
-import { currentUser } from '../queries'
+import { currentUser } from './queries'
 
 export default compose(
   graphql(currentUser, {
