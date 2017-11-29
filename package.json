@@ -4,26 +4,36 @@
 	"main": "index.js",
 	"scripts": {
 		"start": "node node_modules/react-native/local-cli/cli.js start",
-		"test": "jest"
+		"test": "jest",
+		"tsc": "tsc",
+		"clean": "rimraf artifacts",
+		"build": "npm run clean && npm run tsc --",
+		"build:watch": "npm run build -- -w"
 	},
 	"dependencies": {
-		"react-native-keyboard-aware-scroll-view": "^0.4.1",
-		"recompose": "^0.26.0"
+		"react-native-keyboard-aware-scroll-view": "^0.4.1"
 	},
 	"devDependencies": {
+		"@types/jest": "^21.1.8",
+		"@types/react": "^16.0.25",
+		"@types/react-native": "^0.50.7",
+		"apollo-client": "^2.0.3",
+		"apollo-codegen": "^0.18.0",
 		"babel-eslint": "^7.2.3",
 		"babel-jest": "20.0.3",
 		"babel-preset-react-native": "2.0.0",
-		"eslint": "^3.19.0",
-		"eslint-config-airbnb": "^15.0.1",
-		"eslint-import-resolver-babel-module": "^3.0.0",
-		"eslint-plugin-babel": "^4.1.1",
-		"eslint-plugin-import": "^2.2.0",
-		"eslint-plugin-jsx-a11y": "^5.0.1",
-		"eslint-plugin-prefer-object-spread": "^1.2.1",
-		"eslint-plugin-react": "^7.0.1",
+		"graphql": "^0.11.7",
+		"graphql-tag": "^2.5.0",
 		"jest": "21.2.1",
-		"react-test-renderer": "16.0.0"
+		"react": ">=15.0.0",
+		"react-apollo": "^2.0.1",
+		"react-native": ">=0.43.0",
+		"react-native-fbsdk": "^0.6.3",
+		"react-test-renderer": "16.0.0",
+		"recompose": "^0.26.0",
+		"styled-components": ">=2.0.0",
+		"tslint": "^5.8.0",
+		"typescript": "^2.6.2"
 	},
 	"jest": {
 		"preset": "react-native"
@@ -35,6 +45,7 @@
 		"react-apollo": "^2.0.1",
 		"react-native": ">=0.43.0",
 		"react-native-fbsdk": "^0.6.3",
+		"recompose": "^0.26.0",
 		"styled-components": ">=2.0.0"
 	}
 }

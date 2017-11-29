@@ -1,82 +1,93 @@
-import React from 'react';
-import { func, bool } from 'prop-types';
-import styled from 'styled-components/native';
-import { View, Image, Alert } from 'react-native';
+import React from 'react'
+import styled from 'styled-components/native'
+import { View, Image, Alert } from 'react-native'
 import TextInput from '../common/TextInput'
 import PasswordInput from './PasswordInput'
 import Button from '../common/Button'
 
-const emailImage = require('../resources/assets/icon-email.png');
-const facebookImage = require('../resources/assets/icon-facebook.png');
+const emailImage = require('../resources/assets/icon-email.png')
+const facebookImage = require('../resources/assets/icon-facebook.png')
 
 const Wrapper = styled(View)`
   flex: 1;
-`;
+`
 
 const StyledTextInput = styled(TextInput)`
   margin-bottom: 20px
-`;
+`
 const StyledPasswordInput = styled(PasswordInput)`
   margin-bottom: ${32}px;
-`;
+`
 const EmailLoginButton = styled(Button)`
   margin-bottom: ${18}px
-`;
+`
 const FacebookLoginButton = styled(Button)`
 
-`;
-class SignInForm extends React.Component {
+`
+
+export interface ISignInFormProps {
+  signInWithEmail: (email: string, password: string) => Promise<any>,
+  signInWithFacebook: () => Promise<any>,
+  loadingEmail: boolean,
+  loadingFacebook: boolean
+}
+
+export interface ISignInFormState {
+  email: string,
+  password: string
+}
+class SignInForm extends React.Component<ISignInFormProps, ISignInFormState> {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       email: '',
-      password: '',
-    };
+      password: ''
+    }
   }
 
   handleChangeEmail = (email) => {
     this.setState({
-      email,
-    });
+      email
+    })
   }
   handleChangePassword = (password) => {
     this.setState({
-      password,
-    });
+      password
+    })
   }
 
   handleEmailLoginPress = () => {
-    const { signInWithEmail } = this.props;
-    const { email, password } = this.state;
+    const { signInWithEmail } = this.props
+    const { email, password } = this.state
     if (!email || !password) {
       Alert.alert('Erro', 'Preencha todos os campos')
     } else {
-      signInWithEmail(email, password);
+      signInWithEmail(email, password)
     }
   }
   handleFacebookLoginPress = () => {
-    const { signInWithFacebook } = this.props;
-    signInWithFacebook();
+    const { signInWithFacebook } = this.props
+    signInWithFacebook()
   }
 
   render() {
     const {
       email,
-      password,
-    } = this.state;
+      password
+    } = this.state
     const {
-			loadingEmail,
-			loadingFacebook,
-    } = this.props;
-    const loading = loadingEmail || loadingFacebook;
+      loadingEmail,
+      loadingFacebook
+    } = this.props
+    const loading = loadingEmail || loadingFacebook
 
     return (
       <Wrapper>
         <StyledTextInput
           onChangeText={this.handleChangeEmail}
           leftIcon={<Image source={emailImage} />}
-          placeholder="E-mail"
-          autoCapitalize="none"
+          placeholder='E-mail'
+          autoCapitalize='none'
           value={email}
         />
         <StyledPasswordInput
@@ -84,13 +95,13 @@ class SignInForm extends React.Component {
           value={password}
         />
         <EmailLoginButton
-          title="Entrar"
+          title='Entrar'
           loading={loadingEmail}
           disabled={loading}
           onPress={this.handleEmailLoginPress}
         />
         <FacebookLoginButton
-          title="Entrar com Facebook"
+          title='Entrar com Facebook'
           imageSource={facebookImage}
           disabled={loading}
           loading={loadingFacebook}
@@ -98,14 +109,8 @@ class SignInForm extends React.Component {
         />
 
       </Wrapper>
-    );
+    )
   }
 }
 
-SignInForm.propTypes = {
-  signInWithEmail: func.isRequired,
-  signInWithFacebook: func.isRequired,
-  loadingEmail: bool.isRequired,
-  loadingFacebook: bool.isRequired,
-};
-export default SignInForm;
+export default SignInForm
