@@ -1,7 +1,7 @@
 import { AsyncStorage, Alert } from 'react-native'
 import { graphql, withApollo } from 'react-apollo'
 import { withState, compose, ComponentEnhancer } from 'recompose'
-import { authenticateUserMutation, signupUserMutation } from './mutations'
+import { authenticateUserMutation } from './mutations'
 import { ApolloClient } from 'apollo-client'
 
 export type AuthenticateUser = {
@@ -11,17 +11,20 @@ export type Response = {
   authenticateUser: AuthenticateUser
 }
 
-export interface GraphQLHocProps {
-  setLoadingEmail: (loading: boolean) => void,
+export interface IWithSignInProps {
   onSuccessEmail: (authenticateUser: Response) => void
+}
+export interface IGraphQLInputProps extends IWithSignInProps {
+  setLoadingEmail: (loading: boolean) => void,
   client: ApolloClient<any>,
 }
 
-export interface IProps {
+export interface ISignInEmail {
   signInWithEmail: (email: string, password: string) => Promise<any>
 }
 
-export const withSignInEmail = (): ComponentEnhancer<IProps, {}> => compose(
+export const withSignInEmail = <Props>(): ComponentEnhancer<Props & ISignInEmail, IWithSignInProps> =>
+  compose<ISignInEmail, IWithSignInProps>(
   /**
    * Get access to client object to call client.resetStore
    */
@@ -33,10 +36,11 @@ export const withSignInEmail = (): ComponentEnhancer<IProps, {}> => compose(
   /**
    * E-mail Authentication
    */
-  graphql<Response, GraphQLHocProps, IProps>(authenticateUserMutation, {
+  graphql<Response, IGraphQLInputProps, ISignInEmail>(authenticateUserMutation, {
     props: ({ ownProps: { setLoadingEmail, client, onSuccessEmail }, mutate }) => ({
       signInWithEmail: async (email: number, password: number) => {
         setLoadingEmail(true)
+        alert('start')
         try {
           /**
            * Sign in with given email and password
@@ -47,11 +51,13 @@ export const withSignInEmail = (): ComponentEnhancer<IProps, {}> => compose(
               password
             }
           })
+          alert('response')
           /**
            * Write obtained token to local STORAGE
            */
           const token = authenticateUserResponse.data.authenticateUser.token
           if (token) {
+            alert('has token')
             await AsyncStorage.setItem('token', token)
             client.resetStore()
             onSuccessEmail(authenticateUserResponse.data)
@@ -61,6 +67,7 @@ export const withSignInEmail = (): ComponentEnhancer<IProps, {}> => compose(
         } catch (err) {
           Alert.alert(err.toString()) //  TODO
         } finally {
+          alert('finally')
           setLoadingEmail(false)
         }
       }

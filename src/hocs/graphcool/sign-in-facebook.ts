@@ -12,16 +12,21 @@ export type Response = {
   facebookAuthenticateUser: FacebookAuthenticateUser
 }
 
-export interface IInputProps {
-  setLoadingFacebook: (loading: boolean) => void,
+export interface ISignInFacebookProps {
   onSuccessFacebook: (authenticateUser: Response) => void
+}
+export interface ISignInFacebookGraphQLProps extends ISignInFacebookProps {
+  setLoadingFacebook: (loading: boolean) => void,
   client: ApolloClient<any>,
 }
 
-export interface IProps {
-  signInWithFacebook: () => Promise<any>
+export interface ISignInFacebook {
+  signInFacebook: () => Promise<any>
 }
-export default (permissions = ['public_profile', 'email']): ComponentEnhancer<IProps, {}> => compose(
+
+export const withSignInFacebook =
+  (permissions = ['public_profile', 'email']): ComponentEnhancer<ISignInFacebook, ISignInFacebookProps> =>
+  compose(
   /**
    * Get access to client object to call client.resetStore
    */
@@ -33,9 +38,9 @@ export default (permissions = ['public_profile', 'email']): ComponentEnhancer<IP
   /**
    * Facebook Authentication
    */
-  graphql<Response, IInputProps, IProps>(facebookAuthenticateUserMutation, ({
+  graphql<Response, ISignInFacebookGraphQLProps, ISignInFacebook>(facebookAuthenticateUserMutation, ({
     props: ({ ownProps: { client, setLoadingFacebook, onSuccessFacebook }, mutate }) => ({
-      signInWithFacebook: async () => {
+      signInFacebook: async () => {
         try {
           setLoadingFacebook(true)
           const result = await LoginManager.logInWithReadPermissions(permissions)

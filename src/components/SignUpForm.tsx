@@ -1,10 +1,9 @@
 import React from 'react'
 import { View, Image, Alert } from 'react-native'
-import { func, bool } from 'prop-types'
 import styled from 'styled-components/native'
-import TextInput from '../common/TextInput'
-import PasswordInput from './PasswordInput'
-import Button from '../common/Button'
+import {TextInput} from '../common/TextInput'
+import {PasswordInput} from './PasswordInput'
+import {Button} from '../common/Button'
 
 const userImage = require('../resources/assets/icon-user.png')
 const emailImage = require('../resources/assets/icon-email.png')
@@ -15,9 +14,7 @@ const Wrapper = styled(View)`
 const StyledTextInput = styled(TextInput)`
   margin-bottom: 20px
 `
-const StyledPasswordInput = styled(PasswordInput)`
-  margin-bottom: 30px;
-`
+
 const LoginWithPasswordButton = styled(Button)`
 `
 
@@ -31,7 +28,8 @@ export interface ISignUpFormState {
   email: string,
   password: string
 }
-class SignUpForm extends React.Component<ISignUpFormProps, ISignUpFormState> {
+
+export class SignUpForm extends React.Component<ISignUpFormProps, ISignUpFormState> {
   constructor(props) {
     super(props)
     this.state = {
@@ -95,7 +93,8 @@ class SignUpForm extends React.Component<ISignUpFormProps, ISignUpFormState> {
           value={email}
           onChangeText={this.handleChangeEmail}
         />
-        <StyledPasswordInput
+        <PasswordInput
+          style={{marginBottom: 30}}
           value={password}
           onChangeText={this.handleChangePassword}
         />
@@ -109,9 +108,3 @@ class SignUpForm extends React.Component<ISignUpFormProps, ISignUpFormState> {
     )
   }
 }
-
-SignUpForm.propTypes = {
-  signUp: func.isRequired,
-  loading: bool.isRequired
-}
-export default SignUpForm

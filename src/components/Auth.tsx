@@ -88,7 +88,7 @@ export interface IAuthProps {
   onClose: () => void,
 }
 
-class Auth extends React.Component<IAuthProps, {}> {
+export class Auth extends React.Component<IAuthProps, {}> {
   scrollView: any
   constructor(props) {
     super(props)
@@ -128,22 +128,22 @@ class Auth extends React.Component<IAuthProps, {}> {
           >
             <FormWrapper>
               {signInContainer}
-              <FormSeparator light />
+              <FormSeparator />
               <FooterWrapper>
-                <SignInCallPrefix light>Não tem uma conta?</SignInCallPrefix>
+                <SignInCallPrefix>Não tem uma conta?</SignInCallPrefix>
                 <ButtonText onPress={this.handleGoToSignUp}>
-                  <SignInCall light>Cadastre-se aqui</SignInCall>
+                  <SignInCall>Cadastre-se aqui</SignInCall>
                 </ButtonText>
               </FooterWrapper>
 
             </FormWrapper>
             <FormWrapper>
               {signUpContainer}
-              <FormSeparator light />
+              <FormSeparator />
               <FooterWrapper>
-                <SignInCallPrefix light>Já tem uma conta?</SignInCallPrefix>
+                <SignInCallPrefix>Já tem uma conta?</SignInCallPrefix>
                 <ButtonText onPress={this.handleGoToSignIn}>
-                  <SignInCall light>Entre aqui</SignInCall>
+                  <SignInCall>Entre aqui</SignInCall>
                 </ButtonText>
               </FooterWrapper>
             </FormWrapper>
@@ -153,5 +153,3 @@ class Auth extends React.Component<IAuthProps, {}> {
     )
   }
 }
-
-export default Auth

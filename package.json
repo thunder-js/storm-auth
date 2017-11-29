@@ -1,7 +1,8 @@
 {
 	"name": "storm-auth",
 	"version": "0.0.8",
-	"main": "index.js",
+	"main": "artifacts/index.ts",
+	"typings": "artifacts/index.d.ts",
 	"scripts": {
 		"start": "node node_modules/react-native/local-cli/cli.js start",
 		"test": "jest",

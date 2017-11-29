@@ -1,9 +1,11 @@
 import React from 'react'
 import styled from 'styled-components/native'
 import { View, Image, Alert } from 'react-native'
-import TextInput from '../common/TextInput'
-import PasswordInput from './PasswordInput'
-import Button from '../common/Button'
+import {TextInput} from '../common/TextInput'
+import {PasswordInput} from './PasswordInput'
+import {Button} from '../common/Button'
+import { ISignInFacebook } from '../hocs/graphcool/sign-in-facebook'
+import { ISignInEmail } from '../hocs/graphcool/sign-in-email'
 
 const emailImage = require('../resources/assets/icon-email.png')
 const facebookImage = require('../resources/assets/icon-facebook.png')
@@ -15,9 +17,10 @@ const Wrapper = styled(View)`
 const StyledTextInput = styled(TextInput)`
   margin-bottom: 20px
 `
-const StyledPasswordInput = styled(PasswordInput)`
-  margin-bottom: ${32}px;
-`
+// const StyledPasswordInput = styled(PasswordInput)`
+//   margin-bottom: ${32}px;
+// `
+
 const EmailLoginButton = styled(Button)`
   margin-bottom: ${18}px
 `
@@ -26,17 +29,17 @@ const FacebookLoginButton = styled(Button)`
 `
 
 export interface ISignInFormProps {
-  signInWithEmail: (email: string, password: string) => Promise<any>,
-  signInWithFacebook: () => Promise<any>,
-  loadingEmail: boolean,
-  loadingFacebook: boolean
+  signInWithEmail?: (email: string, password: string) => Promise<any>,
+  signInWithFacebook?: () => Promise<any>,
+  loadingEmail?: boolean,
+  loadingFacebook?: boolean
 }
 
 export interface ISignInFormState {
   email: string,
   password: string
 }
-class SignInForm extends React.Component<ISignInFormProps, ISignInFormState> {
+export class SignInForm extends React.Component<ISignInEmail & ISignInFacebook, ISignInFormState> {
   constructor(props) {
     super(props)
     this.state = {
@@ -45,12 +48,12 @@ class SignInForm extends React.Component<ISignInFormProps, ISignInFormState> {
     }
   }
 
-  handleChangeEmail = (email) => {
+  handleChangeEmail = (email: string) => {
     this.setState({
       email
     })
   }
-  handleChangePassword = (password) => {
+  handleChangePassword = (password: string) => {
     this.setState({
       password
     })
@@ -90,7 +93,8 @@ class SignInForm extends React.Component<ISignInFormProps, ISignInFormState> {
           autoCapitalize='none'
           value={email}
         />
-        <StyledPasswordInput
+        <PasswordInput
+          style={{marginBottom: 32}}
           onChangeText={this.handleChangePassword}
           value={password}
         />
@@ -112,5 +116,3 @@ class SignInForm extends React.Component<ISignInFormProps, ISignInFormState> {
     )
   }
 }
-
-export default SignInForm
