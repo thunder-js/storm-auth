@@ -1,7 +1,7 @@
 import { AsyncStorage, Alert } from 'react-native'
 import { graphql, withApollo } from 'react-apollo'
-import { withState, compose } from 'recompose'
-import { authenticateUserMutation } from './mutations'
+import { withState, compose, ComponentEnhancer } from 'recompose'
+import { authenticateUserMutation, signupUserMutation } from './mutations'
 import { ApolloClient } from 'apollo-client'
 
 export type AuthenticateUser = {
@@ -17,7 +17,11 @@ export interface GraphQLHocProps {
   client: ApolloClient<any>,
 }
 
-export default () => compose(
+export interface IProps {
+  signInWithEmail: (email: string, password: string) => Promise<any>
+}
+
+export const withSignInEmail = (): ComponentEnhancer<IProps, {}> => compose(
   /**
    * Get access to client object to call client.resetStore
    */
@@ -29,9 +33,9 @@ export default () => compose(
   /**
    * E-mail Authentication
    */
-  graphql<Response, GraphQLHocProps>(authenticateUserMutation, {
+  graphql<Response, GraphQLHocProps, IProps>(authenticateUserMutation, {
     props: ({ ownProps: { setLoadingEmail, client, onSuccessEmail }, mutate }) => ({
-      signInWithEmail: async (email, password) => {
+      signInWithEmail: async (email: number, password: number) => {
         setLoadingEmail(true)
         try {
           /**

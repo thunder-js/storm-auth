@@ -1,12 +1,28 @@
-import { compose } from 'recompose'
 import { graphql } from 'react-apollo'
 import { currentUser } from './queries'
+import { ComponentDecorator } from 'react-apollo/types'
 
-export default compose(
-  graphql(currentUser, {
-    props: ({ data }) => ({
-      authenticated: !!((data.viewer && data.viewer.user && data.viewer.user.id)),
-      loading: data.loading,
-    }),
-  }),
-)
+export type User = {
+  id: string
+}
+export type Viewer = {
+  user: User
+}
+export type Response = {
+  viewer?: Viewer
+}
+
+export interface IInputProps {
+
+}
+export interface IProps {
+  authenticated: boolean,
+  loading: boolean
+}
+
+export const withIsAuthenticated = graphql<Response, IInputProps, IProps>(currentUser, {
+  props: ({ data }) => ({
+    authenticated: !!((data.viewer && data.viewer.user && data.viewer.user.id)),
+    loading: data.loading
+  })
+})

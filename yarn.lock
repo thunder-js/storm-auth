@@ -69,6 +69,12 @@
   version "16.0.25"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.0.25.tgz#bf696b83fe480c5e0eff4335ee39ebc95884a1ed"
 
+"@types/recompose@^0.24.3":
+  version "0.24.3"
+  resolved "https://registry.yarnpkg.com/@types/recompose/-/recompose-0.24.3.tgz#c2c1063bcea9d670052b886f47b5ce42faba0cf2"
+  dependencies:
+    "@types/react" "*"
+
 "@types/rimraf@^2.0.2":
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/@types/rimraf/-/rimraf-2.0.2.tgz#7f0fc3cf0ff0ad2a99bb723ae1764f30acaf8b6e"

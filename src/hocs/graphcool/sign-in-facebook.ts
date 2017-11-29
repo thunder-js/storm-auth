@@ -1,7 +1,7 @@
 import { AccessToken, LoginManager } from 'react-native-fbsdk'
 import { AsyncStorage, Alert } from 'react-native'
 import { graphql, withApollo } from 'react-apollo'
-import { withState, compose } from 'recompose'
+import { withState, compose, ComponentEnhancer } from 'recompose'
 import { facebookAuthenticateUserMutation } from './mutations'
 import { ApolloClient } from 'apollo-client'
 
@@ -12,13 +12,16 @@ export type Response = {
   facebookAuthenticateUser: FacebookAuthenticateUser
 }
 
-export interface GraphQLHocProps {
+export interface IInputProps {
   setLoadingFacebook: (loading: boolean) => void,
   onSuccessFacebook: (authenticateUser: Response) => void
   client: ApolloClient<any>,
 }
 
-export default (permissions = ['public_profile', 'email']) => compose(
+export interface IProps {
+  signInWithFacebook: () => Promise<any>
+}
+export default (permissions = ['public_profile', 'email']): ComponentEnhancer<IProps, {}> => compose(
   /**
    * Get access to client object to call client.resetStore
    */
@@ -30,7 +33,7 @@ export default (permissions = ['public_profile', 'email']) => compose(
   /**
    * Facebook Authentication
    */
-  graphql<Response, GraphQLHocProps>(facebookAuthenticateUserMutation, ({
+  graphql<Response, IInputProps, IProps>(facebookAuthenticateUserMutation, ({
     props: ({ ownProps: { client, setLoadingFacebook, onSuccessFacebook }, mutate }) => ({
       signInWithFacebook: async () => {
         try {

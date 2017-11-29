@@ -10,4 +10,4 @@ export const currentUser = gql`
       }
     }
   }
-`;
+`

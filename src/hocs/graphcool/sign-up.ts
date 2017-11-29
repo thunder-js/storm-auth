@@ -1,5 +1,5 @@
 import { graphql } from 'react-apollo'
-import { withState, compose } from 'recompose'
+import { withState, compose, ComponentEnhancer } from 'recompose'
 import { AsyncStorage, Alert } from 'react-native'
 import { signupUserMutation } from './mutations'
 
@@ -10,14 +10,17 @@ export type Response = {
   signupUser: SignUpUser
 }
 
-export interface GraphQLHocProps {
+export interface IInputProps {
   setLoading: (loading: boolean) => void,
   onSuccess: (signupUser: Response) => void
 }
 
-export default () => compose(
+export interface IProps {
+  signUp: (name: string, email: string, password: string) => Promise<any>
+}
+export default (): ComponentEnhancer<IProps, {}> => compose(
   withState('loading', 'setLoading', false),
-  graphql<Response, GraphQLHocProps>(signupUserMutation, {
+  graphql<Response, IInputProps, IProps>(signupUserMutation, {
   props: ({ ownProps: { setLoading, onSuccess }, mutate }) => ({
     signUp: async (name, email, password) => {
       setLoading(true)
