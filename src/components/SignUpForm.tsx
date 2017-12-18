@@ -1,26 +1,27 @@
 import React from 'react'
-import { View, Image, Alert } from 'react-native'
-import styled from 'styled-components/native'
+import { View, Image, Alert, ViewStyle, StyleSheet } from 'react-native'
 import {TextInput} from '../common/TextInput'
 import {PasswordInput} from './PasswordInput'
 import {Button} from '../common/Button'
+import { ImageSource, ISignUpProps } from '../types'
 
-const userImage = require('../resources/assets/icon-user.png')
-const emailImage = require('../resources/assets/icon-email.png')
-
-const Wrapper = styled(View)`
-  flex: 1;
-`
-const StyledTextInput = styled(TextInput)`
-  margin-bottom: 20px
-`
-
-const LoginWithPasswordButton = styled(Button)`
-`
+const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+  } as ViewStyle,
+  textInput: {
+    marginBottom: 20,
+  } as ViewStyle,
+})
 
 export interface ISignUpFormProps {
-  signUp: (name: string, email: string, password: string) => Promise<any>
-  loading: boolean
+  assets: {
+    userImage: ImageSource,
+    emailImage: ImageSource,
+    passwordImage: ImageSource,
+    eyeOnImage: ImageSource,
+    eyeOffImage: ImageSource,
+  }
 }
 
 export interface ISignUpFormState {
@@ -29,38 +30,35 @@ export interface ISignUpFormState {
   password: string
 }
 
-export class SignUpForm extends React.Component<ISignUpFormProps, ISignUpFormState> {
+export class SignUpForm extends React.Component<ISignUpFormProps & ISignUpProps, ISignUpFormState> {
   constructor(props) {
     super(props)
     this.state = {
       name: '',
       email: '',
-      password: ''
+      password: '',
     }
   }
-  handleChangeName = (name: string) => this.setState({
-    name
+  public handleChangeName = (name: string) => this.setState({
+    name,
   })
 
-  handleChangeEmail = (email: string) => {
-    this.setState({
-      email
-    })
-  }
-  handleChangePassword = (password: string) => {
-    this.setState({
-      password
-    })
-  }
+  public handleChangeEmail = (email: string) => this.setState({
+    email,
+  })
 
-  handleSignUpPress = () => {
+  public handleChangePassword = (password: string) => this.setState({
+    password,
+  })
+
+  public handleSignUpPress = () => {
     const {
-      signUp
+      signUp,
     } = this.props
     const {
       name,
       email,
-      password
+      password,
     } = this.state
     if (!name || !email || !password) {
       Alert.alert('Erro', 'Preencha todos os campos')
@@ -68,26 +66,29 @@ export class SignUpForm extends React.Component<ISignUpFormProps, ISignUpFormSta
       signUp(name, email, password)
     }
   }
-  render() {
+  public render() {
     const {
       name,
       email,
-      password
+      password,
     } = this.state
     const {
-      loading
+      loading,
+      assets,
     } = this.props
 
     return (
-      <Wrapper>
-        <StyledTextInput
-          leftIcon={<Image source={userImage} />}
-          placeholder='Nome completo'
+      <View style={styles.wrapper}>
+        <TextInput
+          style={styles.textInput}
+          leftIcon={<Image source={assets.userImage} />}
+          placeholder={'Nome'}
           value={name}
           onChangeText={this.handleChangeName}
         />
-        <StyledTextInput
-          leftIcon={<Image source={emailImage} />}
+        <TextInput
+          style={styles.textInput}
+          leftIcon={<Image source={assets.emailImage} />}
           autoCapitalize='none'
           placeholder='E-mail'
           value={email}
@@ -97,14 +98,17 @@ export class SignUpForm extends React.Component<ISignUpFormProps, ISignUpFormSta
           style={{marginBottom: 30}}
           value={password}
           onChangeText={this.handleChangePassword}
+          passwordImage={assets.passwordImage}
+          eyeOnImage={assets.eyeOnImage}
+          eyeOffImage={assets.eyeOffImage}
         />
-        <LoginWithPasswordButton
+        <Button
           title='Cadastrar'
           loading={loading}
           disabled={loading}
           onPress={this.handleSignUpPress}
         />
-      </Wrapper>
+      </View>
     )
   }
 }

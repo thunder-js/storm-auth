@@ -4,29 +4,28 @@ import { graphql, withApollo } from 'react-apollo'
 import { withState, compose, ComponentEnhancer } from 'recompose'
 import { facebookAuthenticateUserMutation } from './mutations'
 import { ApolloClient } from 'apollo-client'
+import { ISignInFacebookProps } from '../../types';
 
-export type FacebookAuthenticateUser = {
+const DEFAULT_PERMISSIONS = ['public_profile', 'email']
+
+export interface IFacebookAuthenticateUser {
   token: string
 }
-export type Response = {
-  facebookAuthenticateUser: FacebookAuthenticateUser
+export interface IResponse {
+  facebookAuthenticateUser: IFacebookAuthenticateUser,
 }
 
-export interface ISignInFacebookProps {
-  onSuccessFacebook: (authenticateUser: Response) => void
+export interface IWithSignInFacebookProps {
+  onSuccessFacebook: (authenticateUser: IResponse) => void
+  onErrorFacebook: (error: any) => void
 }
-export interface ISignInFacebookGraphQLProps extends ISignInFacebookProps {
+export interface ISignInFacebookGraphQLProps extends IWithSignInFacebookProps {
   setLoadingFacebook: (loading: boolean) => void,
   client: ApolloClient<any>,
 }
 
-export interface ISignInFacebook {
-  signInFacebook: () => Promise<any>
-}
-
 export const withSignInFacebook =
-  (permissions = ['public_profile', 'email']): ComponentEnhancer<ISignInFacebook, ISignInFacebookProps> =>
-  compose(
+  <P>(permissions = DEFAULT_PERMISSIONS) => compose<ISignInFacebookProps & P, IWithSignInFacebookProps & P>(
   /**
    * Get access to client object to call client.resetStore
    */
@@ -38,8 +37,8 @@ export const withSignInFacebook =
   /**
    * Facebook Authentication
    */
-  graphql<Response, ISignInFacebookGraphQLProps, ISignInFacebook>(facebookAuthenticateUserMutation, ({
-    props: ({ ownProps: { client, setLoadingFacebook, onSuccessFacebook }, mutate }) => ({
+  graphql<IResponse, ISignInFacebookGraphQLProps, ISignInFacebookProps>(facebookAuthenticateUserMutation, ({
+    props: ({ ownProps: { client, setLoadingFacebook, onSuccessFacebook, onErrorFacebook }, mutate }) => ({
       signInFacebook: async () => {
         try {
           setLoadingFacebook(true)
@@ -53,24 +52,23 @@ export const withSignInFacebook =
           const facebookToken = accessTokenData.accessToken.toString()
           const facebookAuthenticateUserResponse = await mutate({
             variables: {
-              facebookToken
-            }
+              facebookToken,
+            },
           })
 
           const token = facebookAuthenticateUserResponse.data.facebookAuthenticateUser.token
           if (token) {
-            await AsyncStorage.setItem('token', token)
             client.resetStore()
             onSuccessFacebook(facebookAuthenticateUserResponse.data)
           } else {
             throw new Error('Nenhum token na resposta')
           }
         } catch (err) {
-          Alert.alert('Erro logando com Facebook', err.toString())
+          onErrorFacebook(err)
         } finally {
           setLoadingFacebook(false)
         }
-      }
-    })
-  }))
+      },
+    }),
+  })),
 )

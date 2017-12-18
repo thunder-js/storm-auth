@@ -1,29 +1,23 @@
 import { graphql } from 'react-apollo'
-import { withState, compose, ComponentEnhancer } from 'recompose'
-import { AsyncStorage, Alert } from 'react-native'
 import { signupUserMutation } from './mutations'
+import { ISignUpProps } from '../../types'
+import { ComponentDecorator } from 'react-apollo/types';
 
-export type SignUpUser = {
+export interface ISignUpUser {
   token: string
 }
-export type Response = {
-  signupUser: SignUpUser
+export interface ISignUpResponse {
+  signupUser: ISignUpUser,
 }
 
-export interface IInputProps {
-  setLoading: (loading: boolean) => void,
-  onSuccess: (signupUser: Response) => void
+export interface IWithSignUpProps {
+  onSuccess: (signUpUser: ISignUpUser) => void,
+  onError: (error: any) => void,
 }
 
-export interface IProps {
-  signUp: (name: string, email: string, password: string) => Promise<any>
-}
-export default (): ComponentEnhancer<IProps, {}> => compose(
-  withState('loading', 'setLoading', false),
-  graphql<Response, IInputProps, IProps>(signupUserMutation, {
-  props: ({ ownProps: { setLoading, onSuccess }, mutate }) => ({
+export const withSignUp = <P>(): ComponentDecorator<P & IWithSignUpProps, P & ISignUpProps> => graphql<ISignUpResponse, IWithSignUpProps & P, ISignUpProps & P>(signupUserMutation, {
+  props: ({ ownProps: { onSuccess, onError }, mutate }) => ({
     signUp: async (name, email, password) => {
-      setLoading(true)
       try {
         /*
 				 * Sign up with given email and password
@@ -32,27 +26,21 @@ export default (): ComponentEnhancer<IProps, {}> => compose(
           variables: {
             name,
             email,
-            password
-          }
+            password,
+          },
         })
-        setLoading(false)
-        /*
-         * Write obtained token to local STORAGE
-         */
+
         const token = signupResponse.data.signupUser.token
         if (token) {
-          await AsyncStorage.setItem('token', token)
-          // client.resetStore()
-          onSuccess(signupResponse.data)
+          onSuccess(signupResponse.data.signupUser)
         } else {
           throw new Error('No token on response')
         }
       } catch (err) {
-        Alert.alert(err.toString()) // TODO
+        onError(err)
       } finally {
-        setLoading(false)
+        console.log(123)
       }
-    }
-  })
+    },
+  }),
 })
-)

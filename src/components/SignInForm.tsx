@@ -1,118 +1,133 @@
 import React from 'react'
-import styled from 'styled-components/native'
-import { View, Image, Alert } from 'react-native'
-import {TextInput} from '../common/TextInput'
-import {PasswordInput} from './PasswordInput'
-import {Button} from '../common/Button'
-import { ISignInFacebook } from '../hocs/graphcool/sign-in-facebook'
-import { ISignInEmail } from '../hocs/graphcool/sign-in-email'
+import { View, Image, Alert, StyleSheet, ViewStyle } from 'react-native'
+import { TextInput } from '../common/TextInput'
+import { PasswordInput } from './PasswordInput'
+import { Button } from '../common/Button'
+import { ImageSource, ISignInFacebookProps, ISignInEmailProps } from '../types'
 
-const emailImage = require('../resources/assets/icon-email.png')
-const facebookImage = require('../resources/assets/icon-facebook.png')
-
-const Wrapper = styled(View)`
-  flex: 1;
-`
-
-const StyledTextInput = styled(TextInput)`
-  margin-bottom: 20px
-`
-// const StyledPasswordInput = styled(PasswordInput)`
-//   margin-bottom: ${32}px;
-// `
-
-const EmailLoginButton = styled(Button)`
-  margin-bottom: ${18}px
-`
-const FacebookLoginButton = styled(Button)`
-
-`
+const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+  } as ViewStyle,
+  textInput: {
+    marginBottom: 20,
+  } as ViewStyle,
+  buttonEmail: {
+    marginBottom: 18,
+  } as ViewStyle,
+})
 
 export interface ISignInFormProps {
-  signInWithEmail?: (email: string, password: string) => Promise<any>,
-  signInWithFacebook?: () => Promise<any>,
-  loadingEmail?: boolean,
-  loadingFacebook?: boolean
+  assets: {
+    emailImage: ImageSource,
+    passwordImage: ImageSource,
+    eyeOnImage: ImageSource,
+    eyeOffImage: ImageSource,
+    facebookImage: ImageSource,
+  }
 }
 
 export interface ISignInFormState {
   email: string,
   password: string
 }
-export class SignInForm extends React.Component<ISignInEmail & ISignInFacebook, ISignInFormState> {
+
+export class SignInForm extends React.Component<ISignInEmailProps & ISignInFacebookProps & ISignInFormProps, ISignInFormState> {
+  private inputs = {
+    password: undefined,
+  }
+
   constructor(props) {
     super(props)
     this.state = {
       email: '',
-      password: ''
+      password: '',
     }
   }
 
-  handleChangeEmail = (email: string) => {
+  public handleChangeEmail = (email: string) => {
     this.setState({
-      email
+      email,
     })
   }
-  handleChangePassword = (password: string) => {
+  public handleChangePassword = (password: string) => {
     this.setState({
-      password
+      password,
     })
   }
 
-  handleEmailLoginPress = () => {
-    const { signInWithEmail } = this.props
+  public handleEmailLoginPress = () => {
+    const { signInEmail } = this.props
     const { email, password } = this.state
     if (!email || !password) {
       Alert.alert('Erro', 'Preencha todos os campos')
     } else {
-      signInWithEmail(email, password)
+      signInEmail(email, password)
     }
   }
-  handleFacebookLoginPress = () => {
-    const { signInWithFacebook } = this.props
-    signInWithFacebook()
+  public handleFacebookLoginPress = () => {
+    const { signInFacebook } = this.props
+    signInFacebook()
   }
 
-  render() {
+  public focusNextField = (id) => {
+    this.inputs[id].focus()
+  }
+
+  public render() {
     const {
       email,
-      password
+      password,
     } = this.state
     const {
       loadingEmail,
-      loadingFacebook
+      loadingFacebook,
+      assets,
     } = this.props
     const loading = loadingEmail || loadingFacebook
 
     return (
-      <Wrapper>
-        <StyledTextInput
+      <View style={styles.wrapper}>
+        <TextInput
+          style={styles.textInput}
           onChangeText={this.handleChangeEmail}
-          leftIcon={<Image source={emailImage} />}
+          leftIcon={<Image source={assets.emailImage} />}
           placeholder='E-mail'
           autoCapitalize='none'
+          returnKeyType='next'
+          blurOnSubmit={false}
+          onSubmitEditing={() => {
+            this.focusNextField('password')
+          }}
           value={email}
         />
         <PasswordInput
           style={{marginBottom: 32}}
+          passwordImage={assets.passwordImage}
+          eyeOnImage={assets.eyeOnImage}
+          eyeOffImage={assets.eyeOffImage}
           onChangeText={this.handleChangePassword}
+          returnKeyType='done'
+          blurOnSubmit={true}
           value={password}
+          onSubmitEditing={this.handleEmailLoginPress}
+          ref={(input) => this.inputs.password = input}
         />
-        <EmailLoginButton
+        <Button
+          style={styles.buttonEmail}
           title='Entrar'
           loading={loadingEmail}
           disabled={loading}
           onPress={this.handleEmailLoginPress}
         />
-        <FacebookLoginButton
+        <Button
           title='Entrar com Facebook'
-          imageSource={facebookImage}
+          imageSource={assets.facebookImage}
           disabled={loading}
           loading={loadingFacebook}
           onPress={this.handleFacebookLoginPress}
         />
-
-      </Wrapper>
+      </View>
     )
   }
 }

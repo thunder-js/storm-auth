@@ -1,14 +1,14 @@
 import React from 'react'
 import { Image } from 'react-native'
 import {TextInput, ITextInputProps} from '../common/TextInput'
-
-const lockImage = require('../resources/assets/icon-lock.png')
-const eyeImage = require('../resources/assets/icon-eye.png')
-const eyeOffImage = require('../resources/assets/icon-eye-off.png')
+import { ImageSource } from './Auth'
 
 export interface IPasswordInputProps {
   onChangeText: (text: string) => void
   value: string
+  passwordImage: ImageSource
+  eyeOnImage: ImageSource
+  eyeOffImage: ImageSource
 }
 export interface IPasswordInputState {
   secureTextEntry: boolean
@@ -18,20 +18,25 @@ export class PasswordInput extends React.Component<IPasswordInputProps & ITextIn
   constructor(props) {
     super(props)
     this.state = {
-      secureTextEntry: true
+      secureTextEntry: true,
     }
     this.toggleSecureTextEntry = this.toggleSecureTextEntry.bind(this)
   }
-  toggleSecureTextEntry() {
+  public toggleSecureTextEntry() {
     this.setState({
-      secureTextEntry: !this.state.secureTextEntry
+      secureTextEntry: !this.state.secureTextEntry,
     })
   }
-  render() {
+  public render() {
+    const {
+      passwordImage,
+      eyeOnImage,
+      eyeOffImage,
+    } = this.props
     return (
       <TextInput
-        leftIcon={<Image source={lockImage} />}
-        rightIcon={this.state.secureTextEntry ? <Image source={eyeImage} /> : <Image source={eyeOffImage} />}
+        leftIcon={<Image source={passwordImage} />}
+        rightIcon={this.state.secureTextEntry ? <Image source={eyeOnImage} /> : <Image source={eyeOffImage} />}
         placeholder='Senha'
         autoCapitalize='none'
         secureTextEntry={this.state.secureTextEntry}
