@@ -1,9 +1,11 @@
 import React from 'react'
-import { View, Image, Alert, StyleSheet, ViewStyle } from 'react-native'
+import { View, Image, Alert, StyleSheet, ViewStyle, TouchableOpacity, Text, TextStyle } from 'react-native'
 import { TextInput } from '../common/TextInput'
 import { PasswordInput } from './PasswordInput'
 import { Button } from '../common/Button'
 import { ImageSource, ISignInFacebookProps, ISignInEmailProps } from '../types'
+
+const FormSeparator = () => <View style={styles.formSeparator} />
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -15,6 +17,37 @@ const styles = StyleSheet.create({
   buttonEmail: {
     marginBottom: 18,
   } as ViewStyle,
+  footerWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  } as ViewStyle,
+  signUpCallPrefix: {
+    color: '#FFF',
+  } as TextStyle,
+  signUpCall: {
+    fontWeight: '700',
+    marginLeft: 4,
+    color: '#FFF',
+  } as TextStyle,
+  forgotPasswordCall: {
+    fontWeight: '700',
+    color: '#FFF',
+  } as TextStyle,
+  formSeparator: {
+    height: 1,
+    backgroundColor: '#FFF',
+    alignSelf: 'center',
+    width: 124,
+    marginVertical: 42,
+  } as ViewStyle,
+  forgotPasswordButton: {
+    alignSelf: 'flex-end',
+    marginBottom: 8,
+  } as ViewStyle,
+  buttonText: {
+    paddingVertical: 8,
+  } as TextStyle,
 })
 
 export interface ISignInFormProps {
@@ -24,7 +57,9 @@ export interface ISignInFormProps {
     eyeOnImage: ImageSource,
     eyeOffImage: ImageSource,
     facebookImage: ImageSource,
-  }
+  },
+  onPressSignUp: () => void
+  onPressForgotPassword: () => void
 }
 
 export interface ISignInFormState {
@@ -83,6 +118,8 @@ export class SignInForm extends React.Component<ISignInEmailProps & ISignInFaceb
       loadingEmail,
       loadingFacebook,
       assets,
+      onPressSignUp,
+      onPressForgotPassword,
     } = this.props
     const loading = loadingEmail || loadingFacebook
 
@@ -102,7 +139,7 @@ export class SignInForm extends React.Component<ISignInEmailProps & ISignInFaceb
           value={email}
         />
         <PasswordInput
-          style={{marginBottom: 32}}
+          style={{marginBottom: 6}}
           passwordImage={assets.passwordImage}
           eyeOnImage={assets.eyeOnImage}
           eyeOffImage={assets.eyeOffImage}
@@ -113,6 +150,9 @@ export class SignInForm extends React.Component<ISignInEmailProps & ISignInFaceb
           onSubmitEditing={this.handleEmailLoginPress}
           ref={(input) => this.inputs.password = input}
         />
+        <TouchableOpacity style={[styles.buttonText, styles.forgotPasswordButton]} onPress={onPressForgotPassword}>
+            <Text style={styles.forgotPasswordCall}>Esqueci a senha</Text>
+          </TouchableOpacity>
         <Button
           style={styles.buttonEmail}
           title='Entrar'
@@ -127,6 +167,13 @@ export class SignInForm extends React.Component<ISignInEmailProps & ISignInFaceb
           loading={loadingFacebook}
           onPress={this.handleFacebookLoginPress}
         />
+        <FormSeparator />
+        <View style={styles.footerWrapper}>
+          <Text style={styles.signUpCallPrefix}>Não tem uma conta?</Text>
+          <TouchableOpacity style={styles.buttonText} onPress={onPressSignUp}>
+            <Text style={styles.signUpCall}>Cadastre-se aqui</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     )
   }

@@ -71,10 +71,8 @@ export interface IAuthProps {
   backgroundImageSource: ImageSource,
   logoSource: ImageSource,
   closeImageSource: ImageSource,
-  signInContainer: any,
-  signUpContainer: any,
-  forgotPasswordContainer: any,
-  onClose: () => void,
+  onClose: () => void;
+  children: (goToPage: (index: number) => void) => any;
 }
 
 export class AuthBook extends React.Component<IAuthProps, {}> {
@@ -83,31 +81,18 @@ export class AuthBook extends React.Component<IAuthProps, {}> {
     super(props)
   }
   private goToPage = (index: number) => this.scrollView.scrollTo({ x: SCREEN_WIDTH * index, y: 0, animated: true })
-  private handleGoToSignIn = () => {
-    this.goToPage(0)
-  }
-  private handleGoToSignUp = () => {
-    this.goToPage(1)
-  }
-  private handleGoToForgotPassword = () => {
-    this.goToPage(2)
-  }
 
   public render() {
     const {
       backgroundImageSource,
       logoSource,
-      signInContainer,
-      signUpContainer,
-      forgotPasswordContainer,
       closeImageSource,
     } = this.props
     return (
-      // <Wrapper>
       <ImageBackground source={backgroundImageSource} resizeMode='cover' style={styles.backgroundImage}>
         <KeyboardAwareScrollView extraScrollHeight={80}>
           <View style={styles.logoWrapper}>
-            <Logo source={logoSource} resizeMode='contain' />
+            <Image source={logoSource} resizeMode='contain' style={styles.logo} />
           </View>
           <TouchableOpacity
             style={styles.closeButton}
@@ -122,42 +107,11 @@ export class AuthBook extends React.Component<IAuthProps, {}> {
             pagingEnabled
             showsHorizontalScrollIndicator={false}
           >
-            <View style={styles.formWrapper}>
-              {signInContainer}
-              <FormSeparator />
-              <View style={styles.footerWrapper}>
-                <Text style={styles.signInCallPrefix}>Não tem uma conta?</Text>
-                <TouchableOpacity style={styles.buttonText} onPress={this.handleGoToSignUp}>
-                  <Text style={styles.signInCall}>Cadastre-se aqui</Text>
-                </TouchableOpacity>
+            {this.props.children(this.goToPage).map((page, i) => (
+              <View key={`${i}`} style={styles.formWrapper}>
+                {page}
               </View>
-              <View style={styles.footerWrapper}>
-                <Text style={styles.signInCallPrefix}>Esqueceu a senha</Text>
-                <TouchableOpacity style={styles.buttonText} onPress={this.handleGoToForgotPassword}>
-                  <Text style={styles.signInCall}>Clique aqui</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View style={styles.formWrapper}>
-              {signUpContainer}
-              <FormSeparator />
-              <View style={styles.footerWrapper}>
-                <Text style={styles.signInCallPrefix}>Já tem uma conta?</Text>
-                <TouchableOpacity style={styles.buttonText} onPress={this.handleGoToSignIn}>
-                  <Text style={styles.signInCall}>Entre aqui</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View style={styles.formWrapper}>
-              {forgotPasswordContainer}
-              <FormSeparator />
-              <View style={styles.footerWrapper}>
-                <Text style={styles.signInCallPrefix}>Já tem uma conta?</Text>
-                <TouchableOpacity style={styles.buttonText} onPress={this.handleGoToSignIn}>
-                  <Text style={styles.signInCall}>Entre aqui</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
+            ))}
           </ScrollView>
         </KeyboardAwareScrollView>
       </ImageBackground>

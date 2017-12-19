@@ -1,27 +1,18 @@
 import React from 'react';
-import { View, Image, Alert, StyleSheet, TextStyle, ViewStyle } from 'react-native';
+import { View, Image, Alert, StyleSheet, TextStyle, ViewStyle, TouchableOpacity, Text } from 'react-native'
 import {TextInput} from '../common/TextInput';
 import { Button } from '../common/Button';
 import { ImageSource } from '../types';
 
-const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-  } as ViewStyle,
-  textInput: {
-    marginBottom: 20,
-  } as TextStyle,
-  submitButton: {
-    marginBottom: 18,
-  } as ViewStyle,
-})
+const FormSeparator = () => <View style={styles.formSeparator} />
 
 export interface IForgotPasswordRequestFormProps {
   loadingForgotPasswordRequest: boolean;
   forgotPasswordRequest: (email: string) => Promise<any>;
   assets: {
     email: ImageSource,
-  }
+  },
+  onPressSignIn: () => void
 }
 
 export interface IForgotPasswordRequestFormState {
@@ -54,7 +45,7 @@ class ForgotPasswordRequestForm extends React.Component<IForgotPasswordRequestFo
 
   public render() {
     const { email } = this.state;
-    const { loadingForgotPasswordRequest, assets } = this.props;
+    const { loadingForgotPasswordRequest, assets, onPressSignIn } = this.props;
 
     return (
       <View style={styles.wrapper}>
@@ -73,9 +64,51 @@ class ForgotPasswordRequestForm extends React.Component<IForgotPasswordRequestFo
           onPress={this.handleSubmitPress}
           style={styles.submitButton}
         />
+        <FormSeparator />
+        <View style={styles.footerWrapper}>
+          <Text style={styles.signInCallPrefix}>Já tem uma conta?</Text>
+          <TouchableOpacity style={styles.buttonText} onPress={onPressSignIn}>
+            <Text style={styles.signInCall}>Entre aqui</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+  } as ViewStyle,
+  textInput: {
+    marginBottom: 20,
+  } as TextStyle,
+  submitButton: {
+    marginBottom: 18,
+  } as ViewStyle,
+  footerWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  } as ViewStyle,
+  signInCallPrefix: {
+    color: '#FFF',
+  } as TextStyle,
+  signInCall: {
+    fontWeight: '700',
+    marginLeft: 4,
+    color: '#FFF',
+  } as TextStyle,
+  formSeparator: {
+    height: 1,
+    backgroundColor: '#FFF',
+    alignSelf: 'center',
+    width: 124,
+    marginVertical: 42,
+  } as ViewStyle,
+  buttonText: {
+    paddingVertical: 8,
+  } as TextStyle,
+})
 
 export default ForgotPasswordRequestForm;
